@@ -1,6 +1,7 @@
 import React from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
 import UserList from './components/User';
 
 class App extends React.Component {
@@ -12,32 +13,17 @@ class App extends React.Component {
   }
   
   componentDidMount() {
-    const users = [
-      {
-        'email': 'dima@mail.ru',
-        'first_name': 'Dima',
-        'last_name': 'Ivanov',
-        'birthday_year': 1980
-      },
-      {
-        'email': 'masha@mail.ru',
-        'first_name': 'Masha',
-        'last_name': 'Smirnova',
-        'birthday_year': 1991
-      },
-      {
-        'email': 'ignat@mail.ru',
-        'first_name': 'Ignat',
-        'last_name': 'Nosov',
-        'birthday_year': 1975
-      },
-    ]
-    this.setState(
-      {
-        'users': users
-      }
-    )
+    axios.get('http://127.0.0.1:8000/api/authors')
+      .then(response => {
+        const authors = response.data
+          this.setState(
+          {
+            'authors': authors
+          }
+        )
+      }).catch(error => console.log(error))
   }
+
   render () {
     return (
       <div>
@@ -46,6 +32,5 @@ class App extends React.Component {
     )
   }
 }
-
 
 export default App;

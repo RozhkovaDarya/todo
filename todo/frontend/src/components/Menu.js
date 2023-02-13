@@ -11,7 +11,7 @@ const MenuItem = ({menu}) => {
                 {menu.change}
             </td>
             <td>
-                {munu.viewing}
+                {menu.viewing}
             </td>
         </tr>
     )
