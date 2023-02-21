@@ -9,6 +9,7 @@ from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from rest_framework import mixins
+from .filters import ArticleFilter
 
 
 class ArticleAPIVIew(APIView):
@@ -101,3 +102,44 @@ class ArticleCustomViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+
+
+class ArticleQuerysetFilterViewSet(viewsets.ModelViewSet):
+    serializer_class = ArticleSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    queryset = Article.objects.all()
+    
+    def get_queryset(self):
+        return Article.objects.filter(name__contains='python')
+
+
+class ArticleKwargsFilterView(ListAPIView):
+    serializer_class = ArticleSerializer
+    
+    def get_queryset(self):
+        name = self.kwargs['name']
+        return Article.objects.filter(name__contains=name)
+
+
+class ArticleParamFilterViewSet(viewsets.ModelViewSet):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    
+    def get_queryset(self):
+        name = self.request.query_params.get('name', '')
+        articles = Article.objects.all()
+        if name:
+            articles = articles.filter(name__contains=name)
+        return articles
+
+
+class ArticleDjangoFilterViewSet(viewsets.ModelViewSet):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    filterset_fields = ['name', 'user']
+
+
+class ArticleCustomDjangoFilterViewSet(viewsets.ModelViewSet):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    filterset_class = ArticleFilter

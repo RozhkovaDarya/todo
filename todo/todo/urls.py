@@ -10,12 +10,15 @@ from mainapp import views
 from rest_framework.generics import DestroyAPIView, UpdateAPIView
 from django.urls import path, include
 
+
 router = DefaultRouter()
 router.register('base', views.ArticleViewSet, basename='article')
 
 router = DefaultRouter()
 router.register('authors', AuthorModelViewSet)
 
+filter_router = DefaultRouter()
+filter_router.register('param', views.ArticleParamFilterViewSet)
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -41,5 +44,7 @@ urlpatterns = [
     path('views/api-view/', views.ArticleAPIVIew.as_view()),
     path('generic/retrieve/<int:pk>/', views.ArticleRetrieveAPIView.as_view()),
     path('viewsets/', include(router.urls)),
+    path('filters/kwargs/<str:name>/', views.ArticleKwargsFilterView.as_view()),
+    path('filters/', include(filter_router.urls)),
 ]
 
