@@ -3,10 +3,12 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from authors.views import AuthorModelViewSet
-from rest_framework import permissions
+from rest_framework import permissions 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from mainapp import views
+from rest_framework.generics import DestroyAPIView, UpdateAPIView
+
 
 router = DefaultRouter()
 router.register('authors', AuthorModelViewSet)
@@ -34,4 +36,6 @@ urlpatterns = [
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('', include('to_do.urls')),
     path('views/api-view/', views.ArticleAPIVIew.as_view()),
+    path('generic/retrieve/<int:pk>/', views.ArticleRetrieveAPIView.as_view()),
 ]
+
