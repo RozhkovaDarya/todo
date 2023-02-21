@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from rest_framework import mixins
 from .filters import ArticleFilter
+from rest_framework.pagination import LimitOffsetPagination
 
 
 class ArticleAPIVIew(APIView):
@@ -143,3 +144,13 @@ class ArticleCustomDjangoFilterViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     filterset_class = ArticleFilter
+
+
+class ArticleLimitOffsetPagination(LimitOffsetPagination):
+    default_limit = 2
+
+    
+class ArticleLimitOffsetPaginatonViewSet(viewsets.ModelViewSet):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    pagination_class = ArticleLimitOffsetPagination
