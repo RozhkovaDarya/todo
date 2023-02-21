@@ -8,7 +8,10 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from mainapp import views
 from rest_framework.generics import DestroyAPIView, UpdateAPIView
+from django.urls import path, include
 
+router = DefaultRouter()
+router.register('base', views.ArticleViewSet, basename='article')
 
 router = DefaultRouter()
 router.register('authors', AuthorModelViewSet)
@@ -37,5 +40,6 @@ urlpatterns = [
     path('', include('to_do.urls')),
     path('views/api-view/', views.ArticleAPIVIew.as_view()),
     path('generic/retrieve/<int:pk>/', views.ArticleRetrieveAPIView.as_view()),
+    path('viewsets/', include(router.urls)),
 ]
 
