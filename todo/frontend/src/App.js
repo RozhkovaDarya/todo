@@ -1,7 +1,7 @@
 import React from 'react'
 import UserList from './components/User.js'
 import NotesList from './components/Notes.js'
-import {HashRouter, Route, Link} from 'react-router-dom'
+import {HashRouter, Route, Link, Switch} from 'react-router-dom'
 
 
 class App extends React.Component {
@@ -20,6 +20,14 @@ class App extends React.Component {
       'notes': notes
     }
   }
+
+  static NotFound404 = ({ location }) => {
+    return (
+      <div>
+        <h1>Страница по адресу '{location.pathname}' не найдена</h1>
+      </div>
+    )
+  }
   
   render() {
     return (
@@ -31,12 +39,13 @@ class App extends React.Component {
               <Link to='/'>Users</Link>
             </li>
             <li>
-              <Link to='/books'>Notes</Link>
+              <Link to='/notes'>Notes</Link>
             </li>
           </ul>
         </nav>
           <Route exact path='/' component={() => <UserList items={this.state.user} />} />
           <Route exact path='/notes' component={() => <NotesList items={this.state.notes} />} />
+          <Route component={NotFound404} />
         </HashRouter>
       </div>
     )
