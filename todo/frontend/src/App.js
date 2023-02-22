@@ -1,7 +1,7 @@
 import React from 'react'
 import UserList from './components/User.js'
 import NotesList from './components/Notes.js'
-import {HashRouter, Route, Link, Switch, Redirect} from 'react-router-dom'
+import {BrowserRouter, Route, Link, Switch, Redirect} from 'react-router-dom'
 
 
 class App extends React.Component {
@@ -32,7 +32,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <HashRouter>
+        <BrowserRouter>
         <nav>
           <ul>
             <li>
@@ -46,13 +46,13 @@ class App extends React.Component {
           <Switch>
             <Route exact path='/' component={() => <UserList items={this.state.user} />} />
             <Route exact path='/notes' component={() => <NotesList items={this.state.notes} />} />
-            <Route path="/author/:id">
+            <Route path="/user/:id">
               <UserList items={this.state.notes} />
             </Route>
             <Redirect from='/users' to='/' />
             <Route component={NotFound404} />
           </Switch>          
-        </HashRouter>
+        </BrowserRouter>
       </div>
     )
   }
