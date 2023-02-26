@@ -24,6 +24,13 @@ class App extends React.Component {
     }
   }
 
+  get_token(username, password) {
+    axios.post('http://127.0.0.1:8000/api-token-auth/', {username: username, password: password})
+      .then(response => {
+        console.log(response.data)
+      }).catch(error => alert('Неверный логин или пароль'))
+    }
+  
   load_data() {
     axios.get('http://127.0.0.1:8000/api/users/')
       .then(response => {
@@ -65,6 +72,7 @@ class App extends React.Component {
             </Route>
             <Redirect from='/users' to='/' />
             <Route component={NotFound404} />
+            <Route exact path='/login' component={() => <LoginForm get_token={(username, password) => this.get_token(username, password)} />} />
           </Switch>          
         </BrowserRouter>
       </div>
