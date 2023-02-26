@@ -2,33 +2,43 @@ import React from 'react'
 import UserList from './components/User.js'
 import NotesList from './components/Notes.js'
 import {BrowserRouter, Route, Link, Switch, Redirect} from 'react-router-dom'
+import axios from 'axios'
+
+
+const NotFound404 = ({ location }) => {
+  return (
+    <div>
+      <h1>Страница по адресу '{location.pathname}' не найдена</h1>
+    </div>
+  )
+}
 
 
 class App extends React.Component {
   constructor(props) {
     super(props)
-    const user1 = {id: 1, name: 'Петр', birthday_year: 1980}
-    const user2 = {id: 2, name: 'Марина', birthday_year: 1999}
-    const users = [user1, user2]
-    const notes1 = {id: 1, name: 'Алые паруса', author: user1}
-    const notes2 = {id: 2, name: 'Золотая цепь', author: user2}
-    const notes3 = {id: 3, name: 'Пиковая дама', author: user2}
-    const notes4 = {id: 4, name: 'Руслан и Людмила', author: user2}
-    const notes = [notes1, notes2, notes3, notes4]
     this.state = {
-      'user': users,
-      'notes': notes
+      'user': [],
+      'notes': []
     }
   }
 
-  static NotFound404 = ({ location }) => {
-    return (
-      <div>
-        <h1>Страница по адресу '{location.pathname}' не найдена</h1>
-      </div>
-    )
-  }
-  
+  load_data() {
+    axios.get('http://127.0.0.1:8000/api/users/')
+      .then(response => {
+        this.setState({users: response.data})
+      }).catch(error => console.log(error))
+    
+    axios.get('http://127.0.0.1:8000/api/notes/')
+      .then(response => {
+        this.setState({notes: response.data})
+      }).catch(error => console.log(error))
+    }
+    
+    componentDidMount() {
+      this.load_data()
+    }
+
   render() {
     return (
       <div className="App">
