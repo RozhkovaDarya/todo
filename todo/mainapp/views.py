@@ -1,16 +1,20 @@
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
-from .models import Article
 from rest_framework.response import Response
-from .serializers import ArticleSerializer
-from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.decorators import api_view, renderer_classes, action
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView, UpdateAPIView
-from rest_framework import viewsets
-from django.shortcuts import get_object_or_404
-from rest_framework.decorators import action
-from rest_framework import mixins
-from .filters import ArticleFilter
+from rest_framework import mixins, viewsets
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import BasePermission
+from django.shortcuts import get_object_or_404
+from .models import Article, User, Notes
+from .serializers import ArticleSerializer, UserSerializer, NotesSerializer
+from .filters import ArticleFilter
+
+
+class StaffOnly(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_staff
 
 
 class ArticleAPIVIew(APIView):
@@ -154,3 +158,13 @@ class ArticleLimitOffsetPaginatonViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     pagination_class = ArticleLimitOffsetPagination
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+
+    
+class NotesViewSet(viewsets.ModelViewSet):
+    serializer_class = NotesSerializer
+    queryset = Notes.objects.all()

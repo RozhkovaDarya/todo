@@ -2,20 +2,17 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from authors.views import AuthorModelViewSet
-from rest_framework import permissions 
+from rest_framework import permissions, routers
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from mainapp import views
-from rest_framework.generics import DestroyAPIView, UpdateAPIView
-from django.urls import path, include
+from rest_framework.authtoken import views
+from mainapp.views import UserViewSet, NotesViewSet
 
 
-router = DefaultRouter()
-router.register('base', views.ArticleViewSet, basename='article')
-
-router = DefaultRouter()
-router.register('authors', AuthorModelViewSet)
+router = routers.DefaultRouter()
+router.register('users', UserViewSet)
+router.register('notes', NotesViewSet)
 
 filter_router = DefaultRouter()
 filter_router.register('param', views.ArticleParamFilterViewSet)
@@ -46,5 +43,6 @@ urlpatterns = [
     path('viewsets/', include(router.urls)),
     path('filters/kwargs/<str:name>/', views.ArticleKwargsFilterView.as_view()),
     path('filters/', include(filter_router.urls)),
+    path('api-token-auth/', views.obtain_auth_token),
 ]
 
