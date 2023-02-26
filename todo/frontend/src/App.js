@@ -1,9 +1,11 @@
 import React from 'react'
 import UserList from './components/User.js'
 import NotesList from './components/Notes.js'
+import UserNotes from './components/UserNotes.js'
 import {BrowserRouter, Route, Link, Switch, Redirect} from 'react-router-dom'
 import axios from 'axios'
 import LoginForm from './components/Auth.js'
+import Cookies from 'universal-cookie'
 
 
 const NotFound404 = ({ location }) => {
@@ -20,8 +22,29 @@ class App extends React.Component {
     super(props)
     this.state = {
       'user': [],
-      'notes': []
+      'notes': [],
+      'token': ''
     }
+  }
+
+  set_token(token) {
+    const cookies = new Cookies()
+    cookies.set('token', token)
+    this.setState({'token': token})
+  }
+  
+  is_authenticated() {
+    return this.state.token != ''
+  }
+  
+  logout() {
+    this.set_token('')
+  }
+  
+  get_token_from_storage() {
+    const cookies = new Cookies()
+    const token = cookies.get('token')
+    this.setState({'token': token})
   }
 
   get_token(username, password) {
