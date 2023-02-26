@@ -3,6 +3,7 @@ import UserList from './components/User.js'
 import NotesList from './components/Notes.js'
 import {BrowserRouter, Route, Link, Switch, Redirect} from 'react-router-dom'
 import axios from 'axios'
+import LoginForm from './components/Auth.js'
 
 
 const NotFound404 = ({ location }) => {
@@ -50,6 +51,9 @@ class App extends React.Component {
             </li>
             <li>
               <Link to='/notes'>Notes</Link>
+            </li>
+            <li>
+              <Link to='/login'>Login</Link>
             </li>
           </ul>
         </nav>
