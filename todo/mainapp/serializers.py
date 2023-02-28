@@ -14,6 +14,12 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
 
+
+class NotesSerializerBase(serializers.ModelSerializer):
+    class Meta:
+        model = Notes
+        fields = '__all__'
+
         
 class NotesSerializer(serializers.ModelSerializer):
     user = UserSerializer()
