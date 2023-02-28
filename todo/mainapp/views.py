@@ -8,7 +8,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import BasePermission
 from django.shortcuts import get_object_or_404
 from .models import Article, User, Notes
-from .serializers import ArticleSerializer, UserSerializer, NotesSerializer
+from .serializers import ArticleSerializer, UserSerializer, NotesSerializer, NotesSerializerBase
 from .filters import ArticleFilter
 
 
@@ -166,6 +166,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
     
 class NotesViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     serializer_class = NotesSerializer
     queryset = Notes.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method in ['GET']:
+            return NotesSerializer
+        return NotesSerializerBase

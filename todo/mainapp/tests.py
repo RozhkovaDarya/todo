@@ -61,4 +61,26 @@ class TestUserViewSet(TestCase):
         self.assertEqual(author.birthday_year, 1980)
         client.logout()
     
+
+class TestMath(APISimpleTestCase):
+    def test_sqrt(self):
+        import math
+        self.assertEqual(math.sqrt(4), 2)
+
+
+class TestNotesViewSet(APITestCase):
+    
+    def test_get_list(self):
+        response = self.client.get('/api/notes/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_edit_admin(self):
+        author = User.objects.create(name='Андрей', birthday_year=1999)
+        notes = Notes.objects.create(name='Пиковая дама', author=author)
+        admin = User.objects.create_superuser('admin', 'admin@admin.com', 'admin123456')
+        self.client.login(username='admin', password='admin123456')
+        response = self.client.put(f'/api/notes/{Notes.id}/', {'name': 'Руслан и Людмила', 'author': Notes.author.id})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        notes = Notes.objects.get(id=notes.id)
+        self.assertEqual(notes.name,'Руслан и Людмила')
     
