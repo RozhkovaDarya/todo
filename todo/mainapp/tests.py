@@ -34,4 +34,31 @@ class TestUserViewSet(TestCase):
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+    def test_get_detail(self):
+        author = User.objects.create(name='Андрей', birthday_year=1999)
+        client = APIClient()
+        response = client.get(f'/api/users/{User.id}/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    
+    def test_edit_guest(self):
+        author = User.objects.create(name='Андрей', birthday_year=1999)
+        client = APIClient()
+        response = client.put(f'/api/users/{User.id}/', {'name':'Маша',
+                               'birthday_year': 1980})
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    
+    def test_edit_admin(self):
+        author = User.objects.create(name='Андрей', birthday_year=1999)
+        client = APIClient()
+        admin = User.objects.create_superuser('admin', 'admin@admin.com',
+                                              'admin123456')
+        client.login(username='admin', password='admin123456')
+        response = client.put(f'/api/users/{User.id}/', {'name':'Маша',
+                               'birthday_year': 1980})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        author = User.objects.get(id=author.id)
+        self.assertEqual(author.name, 'Маша')
+        self.assertEqual(author.birthday_year, 1980)
+        client.logout()
+    
     
