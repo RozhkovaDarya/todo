@@ -74,13 +74,26 @@ class TestNotesViewSet(APITestCase):
         response = self.client.get('/api/notes/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_edit_admin(self):
-        author = User.objects.create(name='Андрей', birthday_year=1999)
-        notes = Notes.objects.create(name='Пиковая дама', author=author)
+    def test_edit_mixer(self):
+        notes = mixer.blend(Notes)
         admin = User.objects.create_superuser('admin', 'admin@admin.com', 'admin123456')
         self.client.login(username='admin', password='admin123456')
-        response = self.client.put(f'/api/notes/{Notes.id}/', {'name': 'Руслан и Людмила', 'author': Notes.author.id})
+        response = self.client.put(f'/api/notes/{notes.id}/', {'name': 'Руслан и Людмила', 'author': notes.author.id})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         notes = Notes.objects.get(id=notes.id)
         self.assertEqual(notes.name,'Руслан и Людмила')
+    
+    def test_get_detail(self):
+        notes = mixer.blend(Notes, name='Алые паруса')
+        response = self.client.get(f'/api/notes/{notes.id}/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response_notes = json.loads(response.content)
+        self.assertEqual(response_notes['name'], 'Алые паруса')
+    
+    def test_get_detail_author(self):
+        notes = mixer.blend(Notes, author__name='Грин')
+        response = self.client.get(f'/api/notes/{notes.id}/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response_notes = json.loads(response.content)
+        self.assertEqual(response_notes['user']['name'], 'Паша')
     
