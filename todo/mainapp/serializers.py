@@ -13,7 +13,13 @@ class ArticleSerializer(ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = '__all__'
+
+
+class UserSerializerBase(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('name',)
 
 
 class UserSerializerWithFullName(serializers.ModelSerializer):
@@ -30,6 +36,13 @@ class NotesSerializerBase(serializers.ModelSerializer):
         
 class NotesSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    class Meta:
+        model = Notes
+        fields = '__all__'
+
+
+class NotesSerializer(serializers.ModelSerializer):
+    author = UserSerializer()
     class Meta:
         model = Notes
         fields = '__all__'

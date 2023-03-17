@@ -9,7 +9,7 @@ from rest_framework.permissions import BasePermission
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from .models import Article, User, Notes
-from .serializers import ArticleSerializer, UserSerializer, NotesSerializer, NotesSerializerBase, UserSerializerWithFullName
+from .serializers import ArticleSerializer, UserSerializer, UserSerializerBase, NotesSerializer, NotesSerializerBase, UserSerializerWithFullName
 from .filters import ArticleFilter
 
 
@@ -164,6 +164,11 @@ class ArticleLimitOffsetPaginatonViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.version == '2.0':
+            return UserSerializerBase
+        return UserSerializer
 
     
 class NotesViewSet(viewsets.ModelViewSet):
