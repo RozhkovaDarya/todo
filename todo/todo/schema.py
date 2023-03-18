@@ -25,6 +25,22 @@ class Query(graphene.ObjectType):
     
     def resolve_all_users(root, info):
         return User.objects.all()
+    
+    user_by_id = graphene.Field(UserType, id=graphene.Int(required=True))
+    
+    def resolve_user_by_id(self, info, id):
+        try:
+            return User.objects.get(id=id)
+        except User.DoesNotExist:
+            return None
         
+    notes_by_user_name = graphene.List(NotesType, 
+                                       name=graphene.String(required=False))
+    
+    def resolve_notes_by_user_name(self, info, name=None):
+        notes = Notes.objects.all()
+        if name:
+            notes = notes.filter(user__name=name)
+        return notes
 
 schema = graphene.Schema(query=Query)
