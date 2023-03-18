@@ -16,10 +16,15 @@ class UserType(DjangoObjectType):
         
 
 class Query(graphene.ObjectType):
-    all_books = graphene.List(NotesType)
+    all_notes = graphene.List(NotesType)
     
-    def resolve_all_books(root, info):
+    def resolve_all_notes(root, info):
         return Notes.objects.all()
+    
+    all_users = graphene.List(UserType)
+    
+    def resolve_all_users(root, info):
+        return User.objects.all()
         
 
 schema = graphene.Schema(query=Query)
