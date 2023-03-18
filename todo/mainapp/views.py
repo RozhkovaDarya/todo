@@ -3,12 +3,13 @@ from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, renderer_classes, action
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView, UpdateAPIView
-from rest_framework import mixins, viewsets, permissions
+from rest_framework import mixins, viewsets, permissions, generics
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import BasePermission
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 from .models import Article, User, Notes
-from .serializers import ArticleSerializer, UserSerializer, NotesSerializer, NotesSerializerBase
+from .serializers import ArticleSerializer, UserSerializer, UserSerializerBase, NotesSerializer, NotesSerializerBase, UserSerializerWithFullName
 from .filters import ArticleFilter
 
 
@@ -164,6 +165,11 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
+    def get_serializer_class(self):
+        if self.request.version == '2.0':
+            return UserSerializerBase
+        return UserSerializer
+
     
 class NotesViewSet(viewsets.ModelViewSet):
     # permission_classes = [permissions.IsAuthenticated]
@@ -174,3 +180,8 @@ class NotesViewSet(viewsets.ModelViewSet):
         if self.request.method in ['GET']:
             return NotesSerializer
         return NotesSerializerBase
+
+
+class UserListAPIView(viewsets.UserListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
