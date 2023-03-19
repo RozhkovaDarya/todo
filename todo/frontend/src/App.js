@@ -106,7 +106,8 @@ class App extends React.Component {
         </nav>
           <Switch>
             <Route exact path='/' component={() => <UserList items={this.state.user} />} />
-            <Route exact path='/notes/create' component={() => <NotesForm />} />
+            <Route exact path='/notes/create' component={() => <NotesForm createNotes=
+              {(name, author) => this.createNotes(name, author)} />} />
             <Route exact path='/notes' component={() => <NotesList items=
               {this.state.notes} deleteNotes={(id)=>this.deleteNotes(id)} />} />
             <Route path="/user/:id">
@@ -121,6 +122,18 @@ class App extends React.Component {
       </div>
     )
   }
+
+  createBook(name, user) {
+    const headers = this.get_headers()
+    const data = {name: name, user: user}
+    axios.post(`http://127.0.0.1:8000/api/notes/`, data, {headers, headers})
+        .then(response => {
+          let new_notes = response.data
+          const user = this.state.user.filter((item) => item.id === new_notes.user)[0]
+          new_notes.user = user
+          this.setState({notes: [...this.state.notes, new_notes]})
+        }).catch(error => console.log(error))
+    }
 
   deleteNotes(id) {
     const headers = this.get_headers()

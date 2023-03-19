@@ -17,8 +17,7 @@ class NotesForm extends React.Component {
     }
     
     handleSubmit(event) {
-        console.log(this.state.name)
-        console.log(this.state.user)
+        this.props.createNotes(this.state.name, this.state.user)
         event.preventDefault()
     }
     
