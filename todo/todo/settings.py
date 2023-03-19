@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework',
     'rest_framework.authtoken',
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
@@ -145,4 +146,8 @@ REST_FRAMEWORK = {
         #'rest_framework.versioning.NamespaceVersioning',
         'rest_framework.versioning.QueryParameterVersioning',
     ]
+}
+
+GRAPHENE = {
+    "SCHEMA": "library.schema.schema"
 }
