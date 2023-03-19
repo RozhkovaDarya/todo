@@ -106,17 +106,27 @@ class App extends React.Component {
         </nav>
           <Switch>
             <Route exact path='/' component={() => <UserList items={this.state.user} />} />
-            <Route exact path='/notes' component={() => <NotesList items={this.state.notes} />} />
+            <Route exact path='/notes' component={() => <NotesList items=
+              {this.state.notes} deleteNotes={(id)=>this.deleteNotes(id)} />} />
             <Route path="/user/:id">
               <UserList items={this.state.notes} />
             </Route>
             <Redirect from='/users' to='/' />
             <Route component={NotFound404} />
-            <Route exact path='/login' component={() => <LoginForm get_token={(username, password) => this.get_token(username, password)} />} />
+            <Route exact path='/login' component={() => <LoginForm get_token=
+              {(username, password) => this.get_token(username, password)} />} />
           </Switch>          
         </BrowserRouter>
       </div>
     )
+  }
+
+  deleteNotes(id) {
+    const headers = this.get_headers()
+      axios.delete(`http://127.0.0.1:8000/api/books/${id}`, {headers, headers})
+        .then(response => {
+          this.setState({books: this.state.books.filter((item)=>item.id !== id)})
+        }).catch(error => console.log(error))
   }
 }
 
