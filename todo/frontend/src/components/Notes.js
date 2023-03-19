@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 
 const NotesItem = ({item, deleteNotes}) => {
@@ -15,6 +16,7 @@ const NotesItem = ({item, deleteNotes}) => {
 
 const NotesList = ({items, deleteNotes}) => {
     return (
+        <div>
         <table>
             <tr>
                 <th>ID</th>
@@ -24,6 +26,8 @@ const NotesList = ({items, deleteNotes}) => {
             </tr>
             {items.map((item) => <NotesItem item={item} deleteNotes={deleteNotes} />)}
         </table>
+        <Link to='/notes/create'>Create</Link>
+        </div>
     )
 }
 

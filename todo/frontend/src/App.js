@@ -106,6 +106,7 @@ class App extends React.Component {
         </nav>
           <Switch>
             <Route exact path='/' component={() => <UserList items={this.state.user} />} />
+            <Route exact path='/notes/create' component={() => <NotesForm />} />
             <Route exact path='/notes' component={() => <NotesList items=
               {this.state.notes} deleteNotes={(id)=>this.deleteNotes(id)} />} />
             <Route path="/user/:id">
