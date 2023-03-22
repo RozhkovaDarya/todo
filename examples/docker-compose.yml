@@ -19,8 +19,8 @@ services:
       ./wait-for-postgres.sh db
       && python manage.py migrate
       && python manage.py create_data
-      && gunicorn library.wsgi -b 0.0.0.0:8080
-      "
+      && gunicorn library.wsgi -b 0.0.0.0:8080"
+
     depends_on:
       - db
   nginx:
@@ -29,3 +29,10 @@ services:
       - 8000:80
     depends_on:
       - backend
+
+frontend:
+  build: ./frontend
+  ports:
+    - 80:80
+  depends_on:
+    - nginx
